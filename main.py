@@ -61,6 +61,8 @@ def process():
     sqs.close()
 
 
+# Tutelas --> Filtro 
+
 def buscador():
     indices = {}
     filter = ["violencia", "medicinas", "fly", "Outside"]
@@ -74,9 +76,13 @@ def buscador():
                     indices[word] = [tutela]
     return indices
 
-
 @app.get("/")
-def read_root(palabra:str):
+def read_root():
+    return {"Hello": "World"}
+
+
+@app.get("/search")
+def read_item(palabra:str):
 
     index = buscador()
 
