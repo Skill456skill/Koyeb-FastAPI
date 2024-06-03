@@ -73,10 +73,6 @@ def buscador():
 
 
 @app.get("/")
-def read_root():
-    return {"Hello": "World"}
-
-@app.get("/data")
 def read_root(palabra:str):
 
     index = buscador()
