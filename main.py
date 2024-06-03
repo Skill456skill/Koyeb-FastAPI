@@ -89,5 +89,5 @@ def read_item(palabra:str):
 
     index = buscador()
 
-    return {"tutelas encontradas": index.get(palabra "\n\n", "no encontrado")}
+    return {"tutelas encontradas": index.get(palabra + "\n\n", "no encontrado")}
 
