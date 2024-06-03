@@ -60,22 +60,25 @@ def process():
         print("No se encontraron mensajes en la cola.")
     sqs.close()
 
+
+def buscador():
+    indices = {}
+    filter = ["violencia", "medicinas", "fly", "outside"]
+    for tutela in mook.tutelas:
+        words = tutela["resumen"].split()
+        for word in words:
+            if word in indices:
+                indices[word].append(tutela)
+    return indices
+
+
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
 
 @app.get("/data")
-def read_item(data: str | None = Query(None, min_length=3)):
-    return {"tutelas": data}
+def read_root(palabra:str):
 
-@app.get("/api/v1/search")
-def read_item(tipo_tutela: str | None = Query(None, min_length=3)):
-    result = []
-    for tutela in mook.tutelas:
-        if re.search(tipo_tutela, tutela["titulo"] + " " + tutela["resumen"], re.IGNORECASE):
-            result.append(tutela)
-    return result
+    index = buscador()
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
+    return {"tutelas encontradas": index.get("palabra")}
