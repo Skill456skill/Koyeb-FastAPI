@@ -77,4 +77,5 @@ def read_root(palabra:str):
 
     index = buscador()
 
-    return {"tutelas encontradas": index.get("palabra")}
+    return {"tutelas encontradas": index.get("palabra", "No se encontro")}
+
