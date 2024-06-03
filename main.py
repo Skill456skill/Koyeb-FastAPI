@@ -78,7 +78,10 @@ def buscador():
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
+    return {"!Hello, Welcome to this Webside! \n"
+            +"\nHere, you must put on these command to surf: \n"
+            +"- /docs"}
+
 
 
 @app.get("/search")
@@ -86,5 +89,5 @@ def read_item(palabra:str):
 
     index = buscador()
 
-    return {"tutelas encontradas": index.get(palabra, "no encontrado")}
+    return {"tutelas encontradas": index.get(palabra "\n\n", "no encontrado")}
 
