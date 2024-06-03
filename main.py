@@ -1,7 +1,7 @@
 from typing import Union
 from fastapi import FastAPI, Query
 
-import mook
+import mock
 import re
 
 import boto3
@@ -63,12 +63,15 @@ def process():
 
 def buscador():
     indices = {}
-    filter = ["violencia", "medicinas", "fly", "outside"]
-    for tutela in mook.tutelas:
+    filter = ["violencia", "medicinas", "fly", "Outside"]
+    for tutela in mock.tutela:
         words = tutela["resumen"].split()
         for word in words:
-            if word in indices:
-                indices[word].append(tutela)
+            if word in filter:
+                if word in indices:
+                    indices[word].append(tutela)
+                else:
+                    indices[word] = [tutela]
     return indices
 
 
@@ -77,5 +80,5 @@ def read_root(palabra:str):
 
     index = buscador()
 
-    return {"tutelas encontradas": index.get("palabra", "No se encontro")}
+    return {"tutelas encontradas": index.get(palabra, "no encontrado")}
 
