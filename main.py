@@ -1,11 +1,15 @@
 from typing import Union
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query , HTTPException
 
 import mock
 import re
 
 import boto3
 import uuid
+
+
+from collections import deque
+from pydantic import BaseModel
 
 aws_access_key_id = 'AKIAXII2BKO7JEZJAWWV'
 aws_secret_access_key = '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'
@@ -78,16 +82,40 @@ def buscador():
 
 @app.get("/")
 def read_root():
-    return {"!Hello, Welcome to this Webside! \n"
-            +"\nHere, you must put on these command to surf: \n"
-            +"- /docs"}
+    return {"!Hello, Welcome to this Webside!. "
+            +"Here, you must put on these command to surf: "
+            +"/docs"}
 
 
 
 @app.get("/search")
 def read_item(palabra:str):
-
+    
     index = buscador()
+     
+    return {"tutelas encontradas": index.get(palabra, "no encontrado")}
+    
 
-    return {"tutelas encontradas": index.get(palabra + "\n\n", "no encontrado")}
+# Encolado y Desencolado
 
+
+# Modelo para el mensaje
+class Mensaje(BaseModel):
+    contenido: str
+
+cola = deque()
+
+
+@app.post("/encolar")
+def encolar_mensaje(mensaje: Mensaje):
+    for i in range (0,100):
+        cola.append(mensaje.contenido)
+    return {"mensaje": "Mensaje encolado exitosamente"}
+
+@app.get("/desencolar")
+def desencolar_mensaje():
+    if len(cola) == 0:
+        raise HTTPException(status_code=404, detail="No hay mensajes en la cola")
+    for i in range(len(cola)):
+        mensaje = cola.popleft()
+    return {"mensaje": mensaje}
